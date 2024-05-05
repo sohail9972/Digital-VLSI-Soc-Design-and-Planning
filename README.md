@@ -145,3 +145,100 @@ This Repo will Cover the Entire Action Items of the Digital VLSI Soc Design and 
          - SKY_L3 - TritonRoute Method to Handle Connectivity
          - SKY_L4 - Routing Topology Algorithm and final list post-route
         
+
+
+
+
+# Chapter 1: Talking to Computers
+## Introduction :
+
+ QFN-48 means Quad Flat No-leads which have 48 pins and surface_mount.
+  
+  Applications : 
+  1. Medical Devices
+  2. Networking Equipment
+  3. Aerospace and Defense
+  4. Automative Equipment
+
+## Pin Configuration of QFN-48:
+![text](Images/Screenshot_13.png) 
+# Connections with Main Chip:
+![text](Images/Screenshot_14.png) 
+
+## Foundary IPs and RISC-V Soc View: 
+![text](Images/Screenshot_15.png) 
+
+## RISC-V set Architecture :
+The RISC-V ISA is designed to support various application domains, from embedded systems to high-performance computing. It offering simplicity, efficiency, and flexibility for applications with stringent resource constraints.
+
+![alt text](Images/Screenshot_42.png)
+
+
+# Chapter 2: Soc design and OpenLane
+
+## Components of Open Sources
+PDK : 
+ Process Design Kit. It's a collection of files used by semiconductor foundries and integrated circuit (IC) designers to develop and verify semiconductor manufacturing processes and design custom ICs.  the PDK is a critical component of the IC design ecosystem, enabling designers to create custom ICs that meet performance, power, and area requirements while adhering to the constraints of the manufacturing process provided by the foundry.
+
+ - ### OpenSource Digital ASIC Design Flow: 
+     ![alt text](Images/Screenshot_44.png)
+
+ - ### EDS Tools :
+     ![alt text](Images/Screenshot_43.png)
+
+
+## RTL2GDS flow :
+ ![alt text](Images/Screenshot_45.png)
+
+## OpenLANE and strive chipsets :
+ ![alt text](Images/Screenshot_47.png)
+## strive Soc Family :
+ ![alt text](Images/Screenshot_46.png)
+
+## OpenLANE ASIC Flow : 
+ ![alt text](Images/Screenshot_48.png)
+
+- ### Antenna Rule Violation :
+  ![text](Images/Screenshot_49.png) 
+- ### Solution :
+  ![text](Images/Screenshot_50.png)
+- ### Preventive Approach : 
+  ![alt text](Images/Screenshot_51.png)
+
+
+# Chapter 3: Open-Source EDA Tools
+## Directory Structure : 
+![alt text](<Images2/directory 2.png>)
+![alt text](Images2/1.png)
+![alt text](Images2/2.png)
+
+## Working with OpenLANE :
+
+> [!TIP]
+> Ensure Your in Following Directory - Desktop/work/tools/openlane_working_dir/openlane
+
+```console
+- docker
+- ./flow.tcl -interactive
+- package require openlane 0.9
+- prep -design picorv32a
+- run_synthesis
+- run_floorplan
+- run_placement
+- run_cts
+- run_routing
+- run_magic
+- run_magic_spice_expert
+- run_magic_drc
+- run_magic_netgen
+- run_magic_antenna_check
+```
+![alt text](Images2/Openlane.png)
+
+$
+Number  of Flops = No. D filpflops/ No. of Cells
+$
+$$
+Flops = 1613/14876 =0.1084
+$$
+![alt text](image.png)
