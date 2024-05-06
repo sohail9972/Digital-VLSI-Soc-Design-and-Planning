@@ -242,3 +242,258 @@ $$
 Flops = 1613/14876 =0.1084
 $$
 ![alt text](image.png)
+
+
+# Floor Planning and Introduction to Library Cells :
+
+## floor.tcl
+```console
+
+Floorplan defaults
+set ::env(FP_IO_VMETAL) 3
+set ::env(FP_IO_HMETAL) 4
+
+set ::env(FP_SIZING) relative
+set ::env(FP_CORE_UTIL) 50
+set ::env(FP_CORE_MARGIN) 0
+set ::env(FP_ASPECT_RATIO) 1
+
+set ::env(FP_PDN_VOFFSET) 16.32
+set ::env(FP_PDN_VPITCH) 153.6
+set ::env(FP_PDN_HOFFSET) 16.65
+set ::env(FP_PDN_HPITCH) 153.18
+
+set ::env(FP_PDN_AUTO_ADJUST) 1
+
+set ::env(FP_PDN_CORE_RING) 0
+set ::env(FP_PDN_ENABLE_RAILS) 1
+
+set ::env(FP_PDN_CHECK_NODES) 1
+
+set ::env(FP_IO_MODE) 1; # 0 matching mode - 1 random equidistant mode
+set ::env(FP_IO_HLENGTH) 4
+set ::env(FP_IO_VLENGTH) 4
+set ::env(FP_IO_VEXTEND) -1
+set ::env(FP_IO_HEXTEND) -1
+set ::env(FP_IO_VTHICKNESS_MULT) 2
+set ::env(FP_IO_HTHICKNESS_MULT) 2
+
+set ::env(BOTTOM_MARGIN_MULT) 4
+set ::env(TOP_MARGIN_MULT) 4
+```
+
+![alt text](Images/Screenshot_52.png)
+```console
+-run_synthesis
+```
+![text](<New folder/Screenshot from 2024-05-06 14-24-53.png>) 
+
+```console
+-run_floorplan
+```
+> [!CAUTION]
+> - Press 'Isert' button to make it Editable form or
+> - While in command mode press 'i' to enter edit mode and then type the code which is given below.
+> - After editing is done press 'Esc' to once again enter command mode.
+> - Now type ':wq' and press enter to save and exit from file.
+
+![text](<New folder/Screenshot from 2024-05-06 14-25-46.png>) 
+![text](<New folder/Screenshot from 2024-05-06 14-25-56.png>) 
+![text](<New folder/Screenshot from 2024-05-06 14-26-08.png>)
+
+### The Main Directory are concerned are runs, config.tcl and syk130A_sky130_fd_sc_hd_config.tcl
+## README.md
+![text](Images/Screenshot_53.png) 
+## Structure of Main Directory
+![text](Images/Screenshot_54.png) 
+## Config.tcl
+![text](Images/Screenshot_55.png)
+
+
+## To see the actual layout after the flow, we have to open the magic file by adding the command 
+```
+console
+magic -T /home/vsduser/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.floorplan.def &
+```
+It opens the Magic tool Now to centeralize the Circuit by clicking S and V
+![text](Images2/17.png) 
+![text](Images2/18.png)
+![alt text](Images2/4.png) ![alt text](Images2/5.png) 
+
+# To run the Placement, the command
+```console
+run_placement
+```
+
+
+## The Magic file to see actual view of standerd cells placement.And the actual view in the magic file is given below.
+### Commands to load placement def in magic
+```console
+magic -T /home/vsduser/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.placement.def &
+```
+
+The placement is done in two stages, Global and detailed. In global placement, legalization is not happened but after detailed placement legalization will be done.
+When we run the placement, first Global placement is happens. main objective of glibal placement is to reducing the length of wires.
+![alt text](Images2/7.png) 
+![alt text](Images2/8.png) 
+![alt text](Images2/9.png) 
+![alt text](Images2/10.png) 
+![alt text](Images2/11.png) 
+![alt text](Images2/12.png) 
+![alt text](Images2/13.png) 
+![alt text](Images2/14.png) 
+![alt text](Images2/15.png)
+
+
+
+# Design library cell using Magic Layout
+
+To get the clone, copy the clone address from reporetery and paste in openlane terminal after the command git clone. this will create the folder called "vsdstdcelldesign" in openlane directory.
+
+```console
+git clone https://github.com/nickson-jose/vsdstdcelldesign.git
+```
+Open another Terminal and Redirect yourself to following Location 
+```console
+/home/vsduser/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic
+```
+
+Now copy the Sky130A.tech file from this location to cloned location
+to open the Inverter circuit in Magic Tool
+![text](Images2/19.png) 
+
+The Metals and There Dimensions
+
+![text](Images2/22.png) 
+![text](Images2/23.png) 
+![text](Images2/24.png) 
+### Both NMOS and PMOs get connected in the "Y" Struture 
+![text](Images2/25.png) 
+![alt text](Images2/27.png)
+
+
+## Lab steps to create std cell layout and extract spice netlist
+
+Let's do extract with Already Opened tckon window with following Commands 
+```console
+- extract all
+- ext2spice cthresh 0 rthresh 0
+- ext2spice
+```
+![alt text](Images2/28.png)
+
+Now, let's see what inside the spice file by "vim sky130_inv.spice". which is been Created Recently
+
+
+![text](Images2/29.png) 
+![text](Images2/30.png) 
+![text](Images2/31.png)
+
+#Updating the file 
+```console
+* SPICE3 file created from sky130_inv.ext - technology: sky130A
+
+.option scale=0.01u
+.include ./libs/pshort.lib
+.include ./libs/nshort.lib
+
+
+//.subckt sky130_inv A Y VPWR VGND
+X0 Y A VGND VGND sky130_fd_pr__nfet_01v8 ad=1.44n pd=0.152m as=1.37n ps=0.148m w=35 l=23
+X1 Y A VPWR VPWR sky130_fd_pr__pfet_01v8 ad=1.44n pd=0.152m as=1.52n ps=0.156m w=37 l=23
+C0 VPWR A 0.0774f
+C1 Y A 0.0754f
+C2 VPWR Y 0.117f
+C3 Y VGND 0.279f
+C4 A VGND 0.45f
+//C5 VPWR VGND 0.781f
+//.ends
+.tran 1n 20n
+.control run
+.endc
+.end
+```
+![alt text](Images/code.png)
+
+after running this file we get output of ngspice like this,
+![text](Images2/32.png) 
+
+To plot the graph between Voltage and time type the command in ngspice
+```console
+'plot y vs time a'
+```
+
+![text](Images2/33.png) 
+ ### Rise time,Fall time Propagtion Delay and Cell Fall Delay
+![text](Images2/36.png) 
+
+![text](Images2/37.png)
+
+
+# DRC Corrections and rules
+
+To Proceed with the DRC Corrections and Rules , First Download the Folloing Lab files
+
+```console
+   wget http://opencircuitdesign.com/open_pdks/archive/drc_tests.tgz
+```
+Extracft the Files
+```console
+tar xfz drc_tests.tgz 
+```
+To initiate the Magic tool Enter the Command 
+```console
+  magic -d XR
+```
+
+Using Magic Tool , Open the met3.mag file from Menu
+![text](Images2/40.png) 
+![text](Images2/41.png) 
+![text](Images2/42.png) 
+
+![text](Images2/44.png) 
+![text](Images2/45.png) 
+![text](Images2/46.png) 
+
+## Dimensions : 
+![text](Images2/47.png) 
+![text](Images2/48.png) 
+### Next, select a blank area and hover the mouse pointer over the metal3 contact icon. Press the p button and type 'peek' in the tkcon. Then execute the command cif see VIA2 in the tkcon tab.
+### we will see a bunch of black squares appear inside the area.
+![text](Images2/49.png) 
+![text](Images2/50.png) 
+![text](Images2/51.png)
+
+
+# Fixing ploy.9 error
+```console
+load poly.mag
+```
+
+
+![text](Images2/52.png) 
+![text](Images2/54.png) 
+As the Dimension of the Metal is Not as Expected 
+![text](Images2/55.png) 
+### Solution :
+![text](Images2/57.png) 
+![text](Images2/58.png) 
+![text](Images2/59.png) 
+![text](Images2/60.png) 
+![text](Images2/61.png) 
+![text](Images2/62.png) 
+![text](Images2/63.png) 
+
+# Lab challenge exercise to describe DRC error as geometrical construct
+![text](Images2/64.png) 
+![text](Images2/65.png) 
+![text](Images2/66.png) 
+![text](Images2/67.png) 
+![text](Images2/68.png) 
+![text](Images2/69.png) 
+![text](Images2/70.png) 
+![text](Images2/71.png)
+
+### Solution :
+![text](Images2/73.png)
+![text](Images2/74.png)
